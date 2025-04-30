@@ -5,7 +5,7 @@ Transcribe music onto a sheet!
 
 ## Requirements
 
-- Python 3.11 or higher
+- Python 3.10.x (currently, not 3.11+)
 
 ## Setup Instructions
 
