@@ -20,11 +20,12 @@ Transcribe music onto a sheet!
 python -m venv venv
 ```
 3. Activate the virtual environment
-On Windows:
+
+    Windows:
 ```bash
 .\venv\Scripts\activate
 ```
-On macOS/Linux:
+    macOS/Linux:
 ```bash
 source venv/bin/activate
 ```
