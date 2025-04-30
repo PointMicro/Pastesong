@@ -6,10 +6,8 @@ Transcribe music onto a sheet!
 ## Requirements
 
 - Python 3.11 or higher
-- Windows, macOS, or Linux
 
-
-## 🚀 Setup Instructions
+## Setup Instructions
 
 1. Clone this repository
 
