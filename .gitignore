@@ -10,3 +10,8 @@ __pycache__/
 *.env
 pretrained_models/
 demucs-models/
+*.mp3
+output/
+onsets.txt
+onset_plot.png
+pitches.txt

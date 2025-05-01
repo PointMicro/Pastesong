@@ -1,11 +1,12 @@
 # Pastesong
 Transcribe music onto a sheet!
 
+Uses demucs
 
 
 ## Requirements
 
-- Python 3.10.x (currently, not 3.11+)
+- Python 3.8+
 
 ## Setup Instructions
 

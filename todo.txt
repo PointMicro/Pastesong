@@ -1,0 +1,7 @@
+Ideas:
+
+Convert both full song with instrumentals and convert with 1 instrument only and compare how similar they are to transcribe.
+
+
+
+frequency = 2^(n/12) * SR 
