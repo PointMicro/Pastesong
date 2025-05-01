@@ -1,6 +1,5 @@
 import os
-import shlex
-import demucs.separate
+from spleeter.separator import Separator
 import librosa
 import librosa.display
 import numpy as np
@@ -8,37 +7,21 @@ import soundfile as sf
 import matplotlib.pyplot as plt
 
 
-def separate_audio_with_demucs(input_path: str, output_dir: str, model="htdemucs_6s") -> dict:
-    os.makedirs(output_dir, exist_ok=True)
+# firstly, seperate the vocal and instrumental parts of the audio file
+def separate_vocals(input_path: str, output_dir: str) -> str:
+    print(f"Seperating {input_path}.") #debug purposes
+    seperator = Separator('spleeter:5stems')
+    seperator.separate_to_file(input_path, output_dir)
 
-    #demucs 
-    args = f"-n {model} --out {output_dir} \"{input_path}\""
-    demucs.separate.main(shlex.split(args))
+    # make expected vocal path
+    file_name = os.path.splitext(os.path.basename(input_path))[0]
+    vocal_path = os.path.join(output_dir, file_name, 'vocals.wav')
+    return vocal_path
 
-    # Demucs used here (CLI)
-    args = f"-n {model} --out {output_dir} \"{input_path}\""
-    demucs.separate.main(shlex.split(args))
-
-
-    base_name = os.path.splitext(os.path.basename(input_path))[0]
-    stem_folder = os.path.join(output_dir, model, base_name)
-
-    stems = {
-        "drums": os.path.join(stem_folder, "drums.wav"),
-        "bass": os.path.join(stem_folder, "bass.wav"),
-        "other": os.path.join(stem_folder, "other.wav"),
-        "vocals": os.path.join(stem_folder, "vocals.wav"),
-        "guitar": os.path.join(stem_folder, "guitar.wav"),
-        "piano": os.path.join(stem_folder, "piano.wav")
-    }
-    return stems
-
-
-#load audio
+#get audio
 def load_audio(file_path: str):
     y, sr = librosa.load(file_path, sr=None)
     return y, sr
-
 
 #detect the onsets
 def detect_onset(y,sr_):
@@ -58,30 +41,24 @@ def estimate_pitches(y, sr):
     
     return detected_pitches
 
-
-
 if __name__ == "__main__":
     input_audio = "song.mp3"
     output_dir = "output"
 
-    # Separate stems
-    stems = separate_audio_with_demucs(input_audio, output_dir)
-
-    # Test steam to pick for transcription is bass
-    bass_path = stems["bass"]
-    y, sr = load_audio(bass_path)
-
-    # Transcription logic
+    vocals_path = separate_vocals(input_audio, output_dir)
+    y, sr = load_audio(vocals_path)
+    
     onsets = detect_onset(y, sr)
     print(f"Detected {len(onsets)} onsets.")
+    
     pitches = estimate_pitches(y, sr)
     print("First 10 estimated pitches (Hz):", pitches[:10])
 
-    # Optional visualisationS
+    # visiualisations
     plt.figure(figsize=(10, 4))
     librosa.display.waveshow(y, sr=sr)
     plt.vlines(onsets, -1, 1, color='r', label='Onsets')
-    plt.title("Bass Waveform with Onsets")
+    plt.title("Vocal Waveform with Onsets")
     plt.xlabel("Time (s)")
     plt.legend()
     plt.tight_layout()
